@@ -5,10 +5,15 @@ import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+interface StepProps {
+  data: Record<string, unknown>;
+  onDataChange: (data: Record<string, unknown>) => void;
+}
+
 interface WizardStep {
   title: string;
   description: string;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<StepProps>;
 }
 
 interface WizardProps {
