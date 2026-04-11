@@ -1,17 +1,10 @@
 import type { NextConfig } from "next";
-import createNextIntlPlugin from "next-intl/plugin";
 
-const nextConfig: NextConfig = {
-  allowedDevOrigins: ["127.0.0.1"],
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "avatars.githubusercontent.com",
-      },
-    ],
+const config: NextConfig = {
+  reactStrictMode: true,
+  typescript: {
+    tsconfigPath: "./tsconfig.json",
   },
 };
 
-const withNextIntl = createNextIntlPlugin();
-export default withNextIntl(nextConfig);
+export default config;

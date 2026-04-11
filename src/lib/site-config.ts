@@ -1,10 +1,10 @@
 import { env } from "@/env.mjs";
 
 export const siteConfig = {
-  title: "Next.js Starter",
+  title: "G2M Platform",
   description:
-    "A Next.js starter template, packed with features like TypeScript, Tailwind CSS, Next-auth, Eslint, testing tools and more. Jumpstart your project with efficiency and style.",
-  keywords: ["Next.js", "TypeScript", "Tailwind CSS", "Next-auth"],
-  url: env.APP_URL,
-  googleSiteVerificationId: env.GOOGLE_SITE_VERIFICATION_ID || "",
+    "Automated B2B lead sourcing and enrichment platform. Find your ideal customers using AI-powered search and modular integrations.",
+  keywords: ["B2B", "Lead Generation", "SaaS", "Sales", "AI"],
+  url: env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  googleSiteVerificationId: process.env.GOOGLE_SITE_VERIFICATION_ID || "",
 };
