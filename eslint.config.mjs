@@ -26,6 +26,7 @@ const eslintConfig = [
       "jsx-a11y/label-has-associated-control": "warn",
       "jsx-a11y/heading-has-content": "warn",
       "react/no-unescaped-entities": "warn",
+      "jsx-a11y/no-noninteractive-element-interactions": "warn",
     },
   }),
 ];
