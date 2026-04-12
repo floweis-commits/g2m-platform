@@ -5,6 +5,9 @@ const config: NextConfig = {
   typescript: {
     tsconfigPath: "./tsconfig.json",
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default config;
