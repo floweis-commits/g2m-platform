@@ -54,6 +54,13 @@ function DialogOverlay() {
     <div
       className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-200"
       onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") {
+          onClose();
+        }
+      }}
+      role="button"
+      tabIndex={0}
     />
   );
 }
@@ -64,8 +71,6 @@ interface DialogContentProps {
 }
 
 function DialogContent({ children, className }: DialogContentProps) {
-  const { onClose } = useDialog();
-
   return (
     <>
       <DialogOverlay />
@@ -76,6 +81,9 @@ function DialogContent({ children, className }: DialogContentProps) {
             className,
           )}
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
         >
           {children}
         </div>
