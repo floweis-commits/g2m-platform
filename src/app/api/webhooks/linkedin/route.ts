@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { inngest } from "@/lib/inngest/client"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { verifyLinkedInSignature } from "@/lib/services/webhooks/signature-verification"
 
 const LinkedInWebhookSchema = z.object({
   eventType: z.string(),
@@ -14,17 +15,54 @@ const LinkedInWebhookSchema = z.object({
  * POST /api/webhooks/linkedin
  * Receives LinkedIn engagement events (profile views, message replies).
  * Requires LinkedIn webhook subscription set up in the developer portal.
+ * Verifies HMAC-SHA256 signature to prevent spoofed events.
  */
 export async function POST(req: NextRequest) {
-  // Verify LinkedIn webhook signature (simplified — production should verify HMAC)
-  const body = await req.json()
-  const parsed = LinkedInWebhookSchema.safeParse(body)
+  // Get signature from headers
+  const signature = req.headers.get("x-linkedin-signature")
+  const linkedInSigningSecret = process.env.LINKEDIN_WEBHOOK_SIGNING_SECRET
 
-  if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
+  // Verify signature if secret is configured
+  if (linkedInSigningSecret && signature) {
+    // Get raw body for signature verification
+    const rawBody = await req.text()
+    const isValid = verifyLinkedInSignature(rawBody, signature, linkedInSigningSecret)
+
+    if (!isValid) {
+      console.warn("Invalid LinkedIn webhook signature")
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
+    }
+
+    // Re-parse the body since we already consumed it
+    try {
+      const body = JSON.parse(rawBody)
+      const parsed = LinkedInWebhookSchema.safeParse(body)
+
+      if (!parsed.success) {
+        return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
+      }
+
+      return processLinkedInEvent(parsed.data)
+    } catch {
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })
+    }
+  } else {
+    // Fallback: signature verification not configured, accept anyway (development only)
+    const body = await req.json()
+    const parsed = LinkedInWebhookSchema.safeParse(body)
+
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
+    }
+
+    return processLinkedInEvent(parsed.data)
   }
+}
 
-  const { eventType, actor, object, timestamp } = parsed.data
+// Extracted event processing logic
+async function processLinkedInEvent(data: z.infer<typeof LinkedInWebhookSchema>) {
+
+  const { eventType, actor, object, timestamp } = data
   const profileId = actor?.id ?? object?.id
 
   if (!profileId) {

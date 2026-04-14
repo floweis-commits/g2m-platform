@@ -298,7 +298,13 @@ export const outreachSendEmail = inngest.createFunction(
       if (!accessToken) {
         return { success: false, error: "Gmail not connected" }
       }
-      return sendEmail({ config, leadData: lead_data, accessToken })
+      return sendEmail({
+        config,
+        leadData: lead_data,
+        accessToken,
+        userId: user_id,
+        integrationId: "gmail",
+      })
     })
 
     // Log to outreach_logs
@@ -372,7 +378,13 @@ export const outreachLinkedInMessage = inngest.createFunction(
       if (!accessToken) {
         return { success: false, error: "LinkedIn not connected" }
       }
-      return sendLinkedInMessage({ config, leadData: lead_data, accessToken })
+      return sendLinkedInMessage({
+        config,
+        leadData: lead_data,
+        accessToken,
+        userId: user_id,
+        integrationId: "linkedin",
+      })
     })
 
     await step.run("log-outreach", async () => {
@@ -453,7 +465,13 @@ export const outreachLinkedInConnect = inngest.createFunction(
       if (!accessToken) {
         return { success: false, error: "LinkedIn not connected" }
       }
-      return sendLinkedInConnect({ config, leadData: lead_data, accessToken })
+      return sendLinkedInConnect({
+        config,
+        leadData: lead_data,
+        accessToken,
+        userId: user_id,
+        integrationId: "linkedin",
+      })
     })
 
     await step.run("log-outreach", async () => {
