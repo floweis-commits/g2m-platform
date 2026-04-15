@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
     .select("user_id, access_token")
     .eq("integration_id", "gmail")
     .eq("email_address", emailAddress)
+    .eq("email_address", emailAddress)
     .single()
 
   if (!integration) {
