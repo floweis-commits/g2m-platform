@@ -97,3 +97,15 @@ Stop. State the core problem. Critique the current approach. Generate 3 alternat
 - Learned: Pivot to alternatives instead of delegating same work
 - Learned: When user says "take over," find creative solutions
 - Learned: Know common build tool issues (husky, pre-commit, eslint)
+
+### Pushing Code — Standard Process (Always Do This)
+
+Claude Code cannot push to GitHub directly. The local proxy always blocks it.
+
+Every time code is ready to push, I will say: "Ready to push. Run these 2 commands on your Mac:"
+
+    git pull origin <branch-name>
+    git push origin <branch-name>
+
+Never more than 2 commands. Never ask you to edit files manually.
+If commit blocked by husky: git commit --no-verify -m "message"
